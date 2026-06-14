@@ -103,8 +103,8 @@ function draw() {
   //text and bet placement and setup
   textSize(25);
   stroke(0);
-  text("Credits: " + credits, 120, 160);
-  text("Bet: " + bet, 300, 160);
+  text("Credits: " + credits, 120, width/4);
+  text("Bet: " + bet, 300, width/4);
   
   //draw Key box
   fill(79, 40.5, 68.2);
