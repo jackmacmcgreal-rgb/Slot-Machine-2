@@ -513,33 +513,51 @@ function keyPressed() {
   }
 }
 
-let secretTapCount = 0;
-let lastSecretTap = 0;
+let secretCount = 0;
+let lastTime = 0;
 
-function touchStarted() {
-  // define a tiny "secret zone" (top-left corner here)
-  if (touches.length > 0) {
-    let x = touches[0].x;
-    let y = touches[0].y;
+function touchEnded() {
+  if (touches.length === 0) {
+    // fallback: use mouseX/mouseY for reliability
+    let x = mouseX;
+    let y = mouseY;
 
+    // top-left hidden zone
     if (x < 80 && y < 80) {
       let now = millis();
 
-      if (now - lastSecretTap > 800) {
-        secretTapCount = 0; // reset if too slow
+      if (now - lastTime > 800) {
+        secretCount = 0;
       }
 
-      secretTapCount++;
-      lastSecretTap = now;
+      secretCount++;
+      lastTime = now;
 
-      if (secretTapCount >= 3) {
+      if (secretCount >= 3) {
         resetGame();
-        secretTapCount = 0;
+        secretCount = 0;
       }
-
-      return false;
     }
   }
+
+  return false;
+}
+
+function resetGame(){
+   localStorage.clear();
+
+    credits = 500;
+    biggestWin = 0;
+    totalSpins = 0;
+    totalWinnings = 0;
+    totalBetAmount = 0;
+    winCount = 0;
+
+    sessionWinnings = 0;
+    sessionBetAmount = 0;
+
+    bet = 10;
+    resultText = "FULL RESET";
 }
 
 //I acknowledge the use of ChatGPT (https://chat.openai.com/), using GPT-4o, to refine my code. I asked ChatGPT to help with the necessary code required to allow boxes to automatically resize with the window size.
