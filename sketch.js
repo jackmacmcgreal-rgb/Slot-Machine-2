@@ -56,11 +56,6 @@ let winCount = 0;
 let sessionWinnings = 0;
 let sessionBetAmount = 0;
 
-// LONG PRESS RESET
-let pressStartTime = 0;
-let isPressing = false;
-const LONG_PRESS_DURATION = 3000;
-
 //select random symbols from list above
 function getRandomSymbol() {
   return random(symbols);
@@ -108,8 +103,8 @@ function draw() {
   //text and bet placement and setup
   textSize(25);
   stroke(0);
-  text("Credits: " + credits, 120, 200);
-  text("Bet: " + bet, 300, 200);
+  text("Credits: " + credits, 120, 160);
+  text("Bet: " + bet, 300, 160);
   
   //draw Key box
   fill(79, 40.5, 68.2);
@@ -208,16 +203,6 @@ textSize(boxH * 0.03);
   width / 2,
   height * 0.97
 );
-
-  // ✅ LONG PRESS RESET CHECK
-  if (isPressing) {
-    let heldTime = millis() - pressStartTime;
-
-    if (heldTime >= LONG_PRESS_DURATION) {
-      doReset();
-      isPressing = false;
-    }
-  }
 
   // reel placement (RESPONSIVE)
 // reel placement (RESPONSIVE SAFE)
@@ -528,21 +513,33 @@ function keyPressed() {
   }
 }
 
-function doReset() {
- localStorage.clear();
+let secretTapCount = 0;
+let lastSecretTap = 0;
 
-    credits = 500;
-    biggestWin = 0;
-    totalSpins = 0;
-    totalWinnings = 0;
-    totalBetAmount = 0;
-    winCount = 0;
+function touchStarted() {
+  // define a tiny "secret zone" (top-left corner here)
+  if (touches.length > 0) {
+    let x = touches[0].x;
+    let y = touches[0].y;
 
-    sessionWinnings = 0;
-    sessionBetAmount = 0;
+    if (x < 80 && y < 80) {
+      let now = millis();
 
-    bet = 10;
-    resultText = "FULL RESET"
+      if (now - lastSecretTap > 800) {
+        secretTapCount = 0; // reset if too slow
+      }
+
+      secretTapCount++;
+      lastSecretTap = now;
+
+      if (secretTapCount >= 3) {
+        resetGame();
+        secretTapCount = 0;
+      }
+
+      return false;
+    }
+  }
 }
 
 //I acknowledge the use of ChatGPT (https://chat.openai.com/), using GPT-4o, to refine my code. I asked ChatGPT to help with the necessary code required to allow boxes to automatically resize with the window size.
