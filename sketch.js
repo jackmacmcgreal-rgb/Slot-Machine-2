@@ -218,7 +218,6 @@ textSize(boxH * 0.03);
       isPressing = false;
     }
   }
-}
 
   // reel placement (RESPONSIVE)
 // reel placement (RESPONSIVE SAFE)
